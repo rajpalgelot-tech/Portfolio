@@ -63,16 +63,17 @@ src/
   data/profile.ts     # ← ALL personal content
 ```
 
-## First push to GitHub
+## GitHub & deploy
+
+The repo lives at [rajpalgelot-tech/Portfolio](https://github.com/rajpalgelot-tech/Portfolio).
+To push future changes:
 
 ```bash
-cd rajpal-portfolio
 git add .
-git commit -m "Rajpal portfolio"
-git remote add origin https://github.com/<rajpals-user>/<repo>.git
-git push -u origin main
+git commit -m "Update content"
+git push
 ```
 
-Then import the repo on [vercel.com/new](https://vercel.com/new) — no settings
-changes needed. To use a custom favicon, drop a PNG at
+To go live, import the repo on [vercel.com/new](https://vercel.com/new) — no
+settings changes needed. To use a custom favicon, drop a PNG at
 `src/app/icon.png` (or an `apple-icon.png`) and delete `icon.svg`.
