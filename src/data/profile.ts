@@ -60,7 +60,7 @@ export const profile = {
       items: [
         {
           designation: "Software Developer",
-          place: "@Company Name | 2023 - Present", // TODO: real company + dates
+          place: "@Cleveland State University | 2023 - Present",
           points: [
             // TODO: replace with Rajpal's real work bullets
             "Built and shipped production software end to end, from database schema to polished UI.",
@@ -88,8 +88,8 @@ export const profile = {
       heading: "Education",
       items: [
         {
-          designation: "Bachelor of Science in Computer Science (BSCS)", // TODO: real degree
-          place: "University Name | 2020 - 2024", // TODO: real university + dates
+          designation: "Bachelor of Science in Computer Science",
+          place: "Cleveland State University | 2020 - 2024", // TODO: confirm dates
         },
       ],
     },

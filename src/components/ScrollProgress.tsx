@@ -1,32 +1,31 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 /**
- * The small accent dot pinned to the right edge with a line that grows
- * downward as you scroll (the reference site's `.scroll-bar`).
+ * The reference site's scroll indicator: a small accent dot that slides
+ * down the right edge as you scroll, with a fading trail stretching
+ * above it (exact port of the original's `.scroll-bar` behavior).
  */
 export default function ScrollProgress() {
-  const ref = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const update = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = max > 0 ? window.scrollY / max : 0;
-      el.style.setProperty("--p", `${progress * 100}%`);
+    const onScroll = () => {
+      const scrolled = window.scrollY;
+      const max =
+        document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(Math.min((scrolled / max) * 100, 98));
     };
-
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  return <div className="scroll-bar" ref={ref} aria-hidden="true" />;
+  return (
+    <div
+      className="scroll-bar"
+      style={{ top: `${progress}%`, "--p": `${progress * 100}%` } as React.CSSProperties}
+      aria-hidden="true"
+    />
+  );
 }

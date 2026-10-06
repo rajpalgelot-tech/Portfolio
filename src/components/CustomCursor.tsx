@@ -3,37 +3,61 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Replaces the native cursor with a white dot (the reference site's
- * `.circle`). Over links/buttons it narrows into a thin I-beam caret.
+ * The reference site's cursor: a snake of 40 white dots. The head sits
+ * under the mouse and every following dot chases the one before it
+ * (0.35 easing), shrinking along the chain — a smooth tapering trail.
  */
+const COUNT = 40;
+
 export default function CustomCursor() {
-  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const container = containerRef.current;
+    if (!container) return;
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    el.style.transform = "translate(-60px, -60px)";
+
+    const circles = Array.from(
+      container.querySelectorAll<HTMLDivElement>(".circle"),
+    );
+    const trail = circles.map(() => ({ x: 0, y: 0 }));
+    const target = { x: 0, y: 0 };
+
+    const onMove = (event: MouseEvent) => {
+      circles.forEach((circle) => circle.classList.remove("circle-hidden"));
+      target.x = event.clientX;
+      target.y = event.clientY;
+    };
+    window.addEventListener("mousemove", onMove);
 
     let raf = 0;
-    const move = (event: MouseEvent) => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const thin = (event.target as Element | null)?.closest("a, button");
-        el.classList.toggle("circle-thin", Boolean(thin));
-        const { clientX: x, clientY: y } = event;
-        el.style.transform = thin
-          ? `translate(${x - 1}px, ${y - 10}px)`
-          : `translate(${x - 12}px, ${y - 12}px)`;
+    const tick = () => {
+      let x = target.x;
+      let y = target.y;
+      circles.forEach((circle, i) => {
+        circle.style.left = `${x - 12}px`;
+        circle.style.top = `${y - 12}px`;
+        circle.style.scale = `${(circles.length - i) / circles.length}`;
+        trail[i] = { x, y };
+        const next = trail[i + 1] ?? trail[0];
+        x += (next.x - x) * 0.35;
+        y += (next.y - y) * 0.35;
       });
+      raf = requestAnimationFrame(tick);
     };
+    tick();
 
-    window.addEventListener("mousemove", move);
     return () => {
-      window.removeEventListener("mousemove", move);
       cancelAnimationFrame(raf);
+      window.removeEventListener("mousemove", onMove);
     };
   }, []);
 
-  return <div className="circle" ref={ref} aria-hidden="true" />;
+  return (
+    <div ref={containerRef} aria-hidden="true" style={{ display: "contents" }}>
+      {Array.from({ length: COUNT }).map((_, i) => (
+        <div key={i} className="circle circle-hidden" />
+      ))}
+    </div>
+  );
 }
