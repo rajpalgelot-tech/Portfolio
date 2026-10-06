@@ -75,7 +75,7 @@ export const profile = {
       items: [
         {
           designation: "Software Development Certification", // TODO: real title
-          place: "Issuing Organisation | 2022 - 2023", // TODO: real issuer + dates
+          place: "Issuing Organisation | 2024 - 2025", // TODO: real issuer + dates
           points: [
             // TODO: replace with Rajpal's real certification details
             "Completed an intensive software development program covering frontend, backend and databases.",
@@ -89,7 +89,7 @@ export const profile = {
       items: [
         {
           designation: "Bachelor of Science in Computer Science",
-          place: "Cleveland State University | 2020 - 2024", // TODO: confirm dates
+          place: "Cleveland State University | 2023 - 2027",
         },
       ],
     },
